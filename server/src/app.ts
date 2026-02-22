@@ -1,16 +1,26 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 import { CreateNoteType, UpdateNoteType } from "@/types";
 import {
   createNote,
+  deleteDeletedNote,
   deleteNote,
   fetchDeleted,
   fetchNotes,
   updateNote,
 } from "./controllers/notes.controllers";
 import AppError from "./utils/AppError";
+import path from "node:path";
+
 
 const app = express();
+
+
 app.use(express.json());
+app.use(cors())
+app.use(express.static("./public"))
+
+
 
 app.get("/notes", async (req: Request, res: Response) => {
   try {
@@ -30,6 +40,7 @@ app.post(
   "/notes",
   async (req: Request<{}, {}, CreateNoteType>, res: Response) => {
     try {
+
       const note = await createNote(req.body);
       res.status(201).json({
         message: "Note Created successfully!",
@@ -71,6 +82,7 @@ app.put(
 );
 app.delete("/notes/:id", async (req: Request, res: Response) => {
   try {
+    console.log(req.params.id)
     const note = await deleteNote(req.params.id);
     res.status(200).json({
       message: "Note Deleted successfully!",
@@ -105,5 +117,22 @@ app.get("/notes/deleted", async(req: Request, res: Response)=>{
       message: "Internal server error"
     })
   }
+})
+
+app.delete("/notes/deleted/:id", async(req:Request, res: Response)=>{
+  try{
+    const note = deleteDeletedNote(req.params.id)
+    res.status(204).json({
+      message: "note deleted successfully!"
+    })
+  }catch(err){
+    res.status(500).json({
+      message: "internal server error"
+    })
+  }
+})
+
+app.get("*name", (req, res)=>{
+  res.sendFile(path.join(__dirname, "..", "/public/index.html"))
 })
 export default app;

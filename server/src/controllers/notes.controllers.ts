@@ -83,5 +83,13 @@ const fetchDeleted = async()=>{
     throw err
   }
 }
+const deleteDeletedNote = async (_id: string | string[])=>{
+  try{
+    const deletedNote = await DeletedNotesModel.findByIdAndDelete(_id)
+    return deletedNote
+  }catch(err){
+    throw err
 
-export { fetchNotes, createNote, updateNote, deleteNote , fetchDeleted};
+  }
+}
+export { fetchNotes, createNote, updateNote, deleteNote , fetchDeleted , deleteDeletedNote};

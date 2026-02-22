@@ -1,10 +1,14 @@
-import Notes from "@/scenes/Notes";
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ClientView from "@/scenes/ClientView";
+import DeletedNotes from "@/scenes/DeletedNotes";
 function App() {
   return (
-    <main>
-      <Notes/>
-    </main>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<ClientView />} />
+        <Route path="/deleted" element={<DeletedNotes />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
